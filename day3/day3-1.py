@@ -3,13 +3,10 @@ content = f.read().strip().split('\n')
 f.close()
 
 count = 0
-for set in content:
-    rule, pw = set.split(':')
-    range, letter = rule.split(' ')
-    start, stop = range.split('-')
 
-    foundLetters = pw.count(letter)
-    if int(start) <= foundLetters <= int(stop):
-        count = count + 1
+for y in range(len(content)):
+    x = (y * 3) % 31
+    if content[y][x] == '#':
+        count += 1
 
 print(count)

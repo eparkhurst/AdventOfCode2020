@@ -2,23 +2,22 @@ f = open('input.txt', 'r')
 content = f.read().strip().split('\n')
 f.close()
 
-def checkRule(set):
-    rule, pw = set.split(':')
-    range, letter = rule.split(' ')
-    start, stop = range.split('-')
+def getTreeCount(xRate, yRate):
+    count = 0
+    for i in range(len(content)):
+        y = i * yRate
+        x = (i * xRate) % 31
+        if y > len(content):
+            break
+        if content[y][x] == '#':
+            count += 1
+    return count
 
-    # the code below works without subtracting 1 for the index because each pw starts with a space
-    one = pw[int(start)] == letter
-    two = pw[int(stop)] == letter
-
-    # essentially return the xor of the two values
-    return bool(one) != bool(two)
-
-count = 0
-for pwrule in content:
-    if checkRule(pwrule):
-        count += 1
+a = getTreeCount(1,1)
+b = getTreeCount(3,1)
+c = getTreeCount(5,1)
+d = getTreeCount(7,1)
+e = getTreeCount(1,2)
 
 
-
-print(count)
+print( a * b * c * d *  e)
