@@ -1,21 +1,39 @@
+import math
+import re
+
 f = open('input.txt', 'r')
-content = f.read().strip().split('\n\n')
+content = f.read().strip().split('\n')
 f.close()
 
-content = [pp.replace('\n', ' ') for pp in content]
-print(len(content))
-requiredFields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
+def narrow(letter, range):
+    min, max = range
+    diff = math.floor((max - min)/2)
+    if letter in ('F','L'):
+        max = min + diff
+    elif letter in( 'B','R'):
+        min = max - diff
+    return (min, max)
 
-def checkFields(pp):
-     for field in requiredFields:
-        key = field + ':'
-        if key not in pp:
-            return False
-     return True
+def getSeatId(bsp):
+    rows = bsp[0:7]
+    columns = bsp[7:10]
 
-count = 0
-for pp in content:
-    if checkFields(pp):
-        count += 1
+    range = (0,127)
+    for letter in rows:
+        range = narrow(letter, range)
 
-print(count)
+    cRange = (0,7)
+    for letter in columns:
+        cRange = narrow(letter, cRange)
+    return (range[0] * 8) + cRange[0]
+
+def checkAll(content):
+    highest = 0
+    for bsp in content:
+        nextId = getSeatId(bsp)
+        if nextId > highest:
+            highest = nextId
+    print(highest)
+
+checkAll(content)
+# narrow('F', (32, 63))
