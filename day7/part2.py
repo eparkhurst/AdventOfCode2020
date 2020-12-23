@@ -1,25 +1,31 @@
+import re
+
 f = open('input.txt', 'r')
-content = f.read().strip().split('\n\n')
+content = f.read().strip().split('\n')
 f.close()
 
-def removeSpace(group):
-    return group.split('\n')
-cleaned = map(removeSpace, content)
 
-def getCommon(group):
-    inAll = group[0]
-    for person in group:
-        afterCheck = []
-        for letter in inAll:
-            if letter in person:
-                afterCheck.append(letter)
-        inAll = afterCheck
-    return len(set(afterCheck))
+dict = {}
 
-def getCount(cleaned):
-    count = 0
-    for group in cleaned:
-        count += getCommon(group)
-    print(count)
+def recur(bag):
+    if bag in dict.keys() and dict[bag]:
+        count = 0
+        for ib in dict[bag]:
+            count +=  int(ib[0]) + (int(ib[0])* recur(ib[1].strip()))
+        return count
+    else:
+        return 0
 
-getCount(cleaned)
+def createDict(raw):
+
+    for rule in raw:
+        [outer, inner] = rule.split('bags contain')
+        inners = re.findall(r'(\d)(.*?)(?:bag)', inner)
+        dict[outer.strip()] = inners
+    final = recur('shiny gold')
+    print(final)
+
+createDict(content)
+
+# 4758 low
+# 56935 high
