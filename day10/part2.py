@@ -5,29 +5,27 @@ f.close()
 input_data = [int(item) for item in input_data]
 
 
-def check_sums(start, data, target):
-    set_sum = 0
-    nums = []
-    for i in range(start, len(data)):
-        set_sum += data[i]
-        nums.append(data[i])
-        if set_sum == target:
-            return nums
-        if set_sum > target:
-            return False
+def get_paths(data, paths, n):
+    s = 0
+    for x in range(n-1, -1, -1):
+        if data[n]-data[x] <= 3:
+            s += paths[x]
+        else:
+            break
+    return s
 
 
-def find_weakness(data, target):
-    for i in range(len(data)):
-        result = check_sums(i, data, target)
-        if result is not False:
-            print(min(result) + max(result))
-            return
-    print('not found')
+def find_combos(data):
+    data.sort()
+    data = [0] + data + [data[-1] + 3]
+    paths = [1]
+    for i in range(1, len(data)):
+        paths.append(get_paths(data, paths, i))
+    print(paths[-1])
 
 
 def main():
-    find_weakness(input_data, 530627549)
+    find_combos(input_data)
 
 
 if __name__ == "__main__":
