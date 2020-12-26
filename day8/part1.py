@@ -2,8 +2,9 @@ f = open('input.txt', 'r')
 content = f.read().strip().split('\n')
 f.close()
 
-def runCode(code):
-    gA = 0
+
+def run_code(code):
+    g_a = 0
     loc = 0
     previous = []
     while loc < len(code):
@@ -20,17 +21,31 @@ def runCode(code):
             loc += int(direction.strip())
             continue
         elif cmd == 'acc':
-            gA += int(direction.strip())
+            g_a += int(direction.strip())
         loc += 1
-    print(gA)
+    print(g_a)
     return True
+
 
 def main():
     processing = True
-    while processing:
-        result = runCode()
-        if type(result) is list
+    checked = []
+    stack = run_code(content)
+    stack.reverse()
+    for loc in stack:
+        print(loc)
+        action, location = content[loc].split(' ')
+        if action == 'jmp':
+            test_code = content.copy()
+            test_code[loc] = 'nop ' + location
+            if run_code(test_code) is True:
+                return
+        if action == 'nop':
+            test_code = content.copy()
+            test_code[loc] = 'jmp ' + location
+            if run_code(test_code) is True:
+                return
 
 
-runCode(content)
-# 560 too high
+if __name__ == "__main__":
+    main()
