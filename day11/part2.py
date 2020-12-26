@@ -2,30 +2,60 @@ f = open('input.txt', 'r')
 input_data = f.read().strip().split('\n')
 f.close()
 
-input_data = [int(item) for item in input_data]
+
+def get_occupancy(pos, lobby):
+    current = lobby[pos[0]][pos[1]]
+    if current == '.':
+        return '.'
+    directions = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
+    surroundings = 0
+    for dir in directions:
+        y = pos[0] + dir[0]
+        x = pos[1] + dir[1]
+        if y < 0 or y >= len(lobby) or x < 0 or x >= len(lobby[y]):
+            continue
+        spot = lobby[y][x]
+        if spot == '.':
+            while True:
+                x = x + dir[1]
+                y = y + dir[0]
+                if y < 0 or y >= len(lobby) or x < 0 or x >= len(lobby[y]):
+                    break
+                if lobby[y][x] != '.':
+                    spot = lobby[y][x]
+                    break
+        if spot == '#':
+            surroundings += 1
+    if current == 'L' and surroundings == 0:
+        return '#'
+    elif current == '#' and surroundings > 4:
+        return 'L'
+    return current
 
 
-def get_paths(data, paths, n):
-    s = 0
-    for x in range(n-1, -1, -1):
-        if data[n]-data[x] <= 3:
-            s += paths[x]
+def find_stability(data):
+    lobby = data.copy()
+    while True:
+        new_lobby = []
+        for y in range(len(lobby)):
+            for x in range(len(lobby[y])):
+                if x == 0:
+                    new_lobby.append([])
+                new_lobby[y].append(get_occupancy((y, x), lobby))
+        if new_lobby == lobby:
+            return new_lobby
         else:
-            break
-    return s
-
-
-def find_combos(data):
-    data.sort()
-    data = [0] + data + [data[-1] + 3]
-    paths = [1]
-    for i in range(1, len(data)):
-        paths.append(get_paths(data, paths, i))
-    print(paths[-1])
+            lobby = new_lobby.copy()
 
 
 def main():
-    find_combos(input_data)
+    final = find_stability(input_data)
+    final_count = 0
+    for row in final:
+        for seat in row:
+            if seat == '#':
+                final_count += 1
+    print(final_count)
 
 
 if __name__ == "__main__":
