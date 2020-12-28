@@ -12,7 +12,7 @@ def get_latest_index(li, x, current):
 def run_program(data):
     running_list = data.copy()
     running_list = [int(num) for num in running_list]
-    for i in range(len(data), 2020):
+    for i in range(len(data), 30000000):
         last =  running_list[-1]
         next = get_latest_index(running_list, last, i)
         running_list.append(next)
