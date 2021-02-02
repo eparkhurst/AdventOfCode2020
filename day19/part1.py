@@ -1,4 +1,3 @@
-import re
 f = open('input.txt', 'r')
 rules_block, messages = f.read().strip().split('\n\n')
 f.close()
